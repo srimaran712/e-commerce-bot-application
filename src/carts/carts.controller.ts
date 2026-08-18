@@ -12,8 +12,7 @@ export class CartsController {
       return this.cartService.addToCart(body.sessionId,body.productId,body.quantity)
    }
 
-   @Get()
-  
+   @Get() 
    getCartDetails( @Query('sessionId') sessionId:string){
     return this.cartService.getCart(sessionId)
 
