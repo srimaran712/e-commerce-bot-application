@@ -20,7 +20,7 @@ export class ProductsService {
         if(maxPrice!==undefined){
             filter.price={$lte:maxPrice}
         }
-
+        //search with or operator any value present it will return
         if(query){
             filter.$or=[
                  {   name: { $regex: query, $options: 'i' } },
