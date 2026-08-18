@@ -22,6 +22,7 @@ import { Product, ProductSchema } from 'src/products/schemas/products.schema';
     ProductsModule
   ],
   controllers: [CartsController],
-  providers: [CartsService]
+  providers: [CartsService],
+  exports:[CartsService]
 })
 export class CartsModule {}

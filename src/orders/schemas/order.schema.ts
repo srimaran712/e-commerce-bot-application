@@ -52,7 +52,7 @@ export class Order{
     discountAmount!:number
 
 
-    @Prop({type:'enum',enum:Object.values(OrderStatus),default:OrderStatus.PENDING})
+    @Prop({enum:Object.values(OrderStatus),default:OrderStatus.PENDING})
     orderStatus!:OrderStatus
 
 }

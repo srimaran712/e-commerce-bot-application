@@ -22,6 +22,7 @@ import {Cart, CartSchema } from 'src/carts/schemas/cart.schema';
 
   ],
   controllers: [DiscountsController],
-  providers: [DiscountsService]
+  providers: [DiscountsService],
+  exports:[DiscountsService]
 })
 export class DiscountsModule {}
