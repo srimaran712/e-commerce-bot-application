@@ -9,7 +9,7 @@ export class DiscountsController {
 
     //calculate a discount
     @Post('calculate')
-    applyDiscountCalculation(@Body() body:{code:string,subTotal:number}){
-        return this.discountService.calculateDiscount(body.code,body.subTotal)
+    applyDiscountCalculation(@Body() body:{sessionId:string,code:string}){
+        return this.discountService.calculateDiscount(body.sessionId,body.code)
     }
 }

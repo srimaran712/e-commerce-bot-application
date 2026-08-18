@@ -2,15 +2,19 @@ import { Injectable ,NotFoundException,BadRequestException} from '@nestjs/common
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Discount ,DiscountSchema} from './schemas/discounts.schema';
+import { Cart } from 'src/carts/schemas/cart.schema';
 
 @Injectable()
 export class DiscountsService {
     constructor(
         @InjectModel(Discount.name)
-        private discountModel:Model<Discount>
+        private discountModel:Model<Discount>,
+        @InjectModel(Cart.name)
+        private cartModel:Model<Cart>
+
     ){}
 
-    async calculateDiscount(code:string,subTotal:number){
+    async calculateDiscount(sessionId:string,code:string){
           let TotalAmount=0
           let DiscountAmount=0
         //check whether the code exist and is active or not 
@@ -22,9 +26,21 @@ export class DiscountsService {
         if(!isCode){
             throw new NotFoundException('discount code is expired')
         }
+
+
+        //check the cart is exist 
+
+        const cart= await this.cartModel.findOne({sessionId})
+        if(!cart){
+            throw new NotFoundException('No cart found inside')
+        }
+      
+       const  subTotal= cart.items.reduce((total,item)=>
+            total + item.priceAtAdd * item.quantity
+        ,0)
+
         const isMinCartValue=subTotal>=isCode.minCartValue
       
-        console.log(isMinCartValue)
        if(!isMinCartValue){
         
              throw new BadRequestException(`You need to purchase on or above ${isCode.minCartValue}`)
@@ -56,7 +72,7 @@ export class DiscountsService {
 
        
     if (isCode.type === 'flat') {
-  DiscountAmount = isCode.value;
+  DiscountAmount =  Math.min(isCode.value,subTotal);
   TotalAmount = subTotal - DiscountAmount;
 }
          
