@@ -64,7 +64,7 @@ export class CartsService {
       status: CartStatus.OPEN,
     });
 
-    return cart;
+    return this.getCart(sessionId);
   }
 
   // 5. Check whether product is already in cart
@@ -84,7 +84,7 @@ export class CartsService {
     existingItem.quantity = newQuantity;
 
     // Keep the price snapshot current when adding more
-    existingItem.priceAtAdd = product.price;
+    //existingItem.priceAtAdd = product.price;
   } else {
     if (product.stock < quantity) {
       throw new BadRequestException(
@@ -98,11 +98,21 @@ export class CartsService {
       priceAtAdd: product.price,
     });
   }
-
-  return cart.save();
+ await cart.save();
+ return this.getCart(sessionId)
 }
 
+async addItemsToCart(sessionId:string,items:{productId:string,quantity:number}[],){
+    for (const item of items) {
+    await this.addToCart(
+      sessionId,
+      item.productId,
+      item.quantity,
+    );
+  }
 
+  return this.getCart(sessionId);
+}
 
 async getCart(sessionId: string) {
   const cart = await this.cartModel

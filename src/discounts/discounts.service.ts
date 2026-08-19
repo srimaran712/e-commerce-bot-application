@@ -75,9 +75,60 @@ export class DiscountsService {
   DiscountAmount =  Math.min(isCode.value,subTotal);
   TotalAmount = subTotal - DiscountAmount;
 }
-         
+         //update discount code in the cart
+         await this.cartModel.findOneAndUpdate({
+            _id:cart._id
+         },
+         {$set:{discountCode:isCode.code}}
+        )
          //if not present we can calculate based on the type 
          return {TotalAmount,DiscountAmount}
+    }
+
+
+    async calculateDiscountFromCode(code:string,subTotal:number){
+        let DiscountAmount=0
+        let TotalAmount=0
+         const isCode= await this.discountModel.findOne({
+            code,
+            active:true
+        })
+
+        if(!isCode){
+            throw new NotFoundException('discount code is expired')
+        }
+
+
+        const isMinCartValue=subTotal>=isCode.minCartValue
+      
+       if(!isMinCartValue){
+        
+        throw new BadRequestException(`You need to purchase on or above ${isCode.minCartValue}`)
+       }
+
+       //calculating the perentage thing
+       if (isCode.type === 'percent') {
+        DiscountAmount = subTotal * (isCode.value / 100);
+
+       if (isCode.maxDiscount !== undefined) {
+       DiscountAmount = Math.min(
+        DiscountAmount,
+       isCode.maxDiscount,
+     );
+  }
+
+  TotalAmount = subTotal - DiscountAmount;
+     }
+
+
+     //flat calculation
+    if (isCode.type === 'flat') {
+    DiscountAmount =  Math.min(isCode.value,subTotal);
+    TotalAmount = subTotal - DiscountAmount;
+   }
+   
+    return {TotalAmount,DiscountAmount}
+
     }
 }
 // Does SAVE10 exist?

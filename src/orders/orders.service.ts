@@ -22,14 +22,10 @@ export class OrdersService {
     ){}
 
     async confirmOrder(sessionId:string){
-
-        const session= await this.connection.startSession()
-
-        try{
-           
-            //need to fetch the cart session
-      await session.startTransaction()
-      const cart= await this.cartRepository.findOneAndUpdate(
+    //starting a session
+    const session= await this.connection.startSession()
+    //updating the cart with status open to avoid concurrent    
+    const cart= await this.cartRepository.findOneAndUpdate(
         {
             sessionId,
             status:CartStatus.OPEN
@@ -40,12 +36,18 @@ export class OrdersService {
         {
             new:false
         }
-    ).session(session)
-    if (!cart) {
-    throw new NotFoundException('Open cart not found');
-  }
-     
+    )
 
+  if (!cart) {
+    throw new NotFoundException('Open cart not found');
+    }
+
+
+    try{
+           
+            //need to fetch the cart session
+      await session.startTransaction()
+     //iterating the items through product to check stock price change here
      for (const item of cart?.items){
        const product = await this.productRepository.findOneAndUpdate(
       {
@@ -69,10 +71,32 @@ export class OrdersService {
         'Product price or stock is no longer valid',
       );
     }
+
      }
-     const subTotal=cart.items.reduce((total,item)=>total+item.priceAtAdd*item.quantity,0)
-     const discountResult= await this.discountService.calculateDiscount(cart.sessionId,cart.discountCode)
-     await this.orderRepository.create(
+     
+     //calculating sub total from cart 
+      const subTotal=cart.items.reduce((total,item)=>total+item.priceAtAdd*item.quantity,0)
+
+      let discountAmount = 0;
+      let totalAmount = subTotal;
+
+      //check cart has discount code 
+      if(cart.discountCode){
+        const discountResult =
+          await this.discountService.calculateDiscountFromCode(
+            cart.discountCode,
+            subTotal,
+          );
+
+        discountAmount =
+          discountResult.DiscountAmount;
+
+        totalAmount =
+          discountResult.TotalAmount;
+      }
+    
+   //creating an order here 
+  await this.orderRepository.create(
   [
     {
       orderId: `ORD-${Date.now()}`,
@@ -83,18 +107,45 @@ export class OrdersService {
         actualPrice: item.priceAtAdd,
       })),
       subTotal,
-      total:discountResult.TotalAmount,
-      discountCode: cart.discountCode,
-      discountAmount:discountResult.DiscountAmount,
+      total:totalAmount,
+      discountAmount:discountAmount,
       orderStatus: OrderStatus.ORDERED,
     },
   ],
   { session },
-);
-        }
-        catch{
+   );
+
+  //update the cart repository
+
+   await this.cartRepository.updateOne(
+    {
+      _id:cart._id
+    },
+    {
+      $set:{status:CartStatus.PLACED}
+    },
+    {
+      session,
+    },
+
+   )
+  }
+  catch{
+        await this.cartRepository.updateOne(
+      {
+        _id: cart._id,
+        status: CartStatus.CONFIRMING,
+      },
+      {
+        $set: {
+          status: CartStatus.OPEN,
+        },
+      },
+    );
          await session.abortTransaction()
-        }finally{
+
+        }
+        finally{
           session.endSession()
         }
            
