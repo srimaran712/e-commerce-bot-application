@@ -22,8 +22,7 @@ export class OrdersService {
     ){}
 
     async confirmOrder(sessionId:string){
-    //starting a session
-    const session= await this.connection.startSession()
+    
     //updating the cart with status open to avoid concurrent    
     const cart= await this.cartRepository.findOneAndUpdate(
         {
@@ -42,12 +41,14 @@ export class OrdersService {
     throw new NotFoundException('Open cart not found');
     }
 
-
+   //starting a session
+    const session= await this.connection.startSession();
+    let placedOrder:any;
     try{
            
             //need to fetch the cart session
-      await session.startTransaction()
-     //iterating the items through product to check stock price change here
+      await session.withTransaction(async ()=>{
+           //iterating the items through product to check stock price change here
      for (const item of cart?.items){
        const product = await this.productRepository.findOneAndUpdate(
       {
@@ -96,10 +97,10 @@ export class OrdersService {
       }
     
    //creating an order here 
-  await this.orderRepository.create(
+const [order]=  await this.orderRepository.create(
   [
     {
-      orderId: `ORD-${Date.now()}`,
+      orderId: `ORD-${cart._id}`,
       cartId: cart._id,
       orderItems: cart.items.map((item) => ({
         productId: item.productId,
@@ -129,8 +130,13 @@ export class OrdersService {
     },
 
    )
+
+   placedOrder = order;
+      })
+     
+    return { success: true, order: placedOrder };
   }
-  catch{
+  catch(err){
         await this.cartRepository.updateOne(
       {
         _id: cart._id,
@@ -141,9 +147,12 @@ export class OrdersService {
           status: CartStatus.OPEN,
         },
       },
-    );
-         await session.abortTransaction()
-
+       );
+        
+      if (err instanceof BadRequestException) {
+      return { error: 'STALE_PRICE_OR_STOCK', message: err.message };
+    }
+    throw err;
         }
         finally{
           session.endSession()

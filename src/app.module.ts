@@ -6,10 +6,11 @@ import { ProductsModule } from './products/products.module';
 import { DiscountsModule } from './discounts/discounts.module';
 import { CartsModule } from './carts/carts.module';
 import { OrdersModule } from './orders/orders.module';
+import { ChatModule } from './chat/chat.module';
 
 
 @Module({
-  imports: [DatabaseModule, ProductsModule, DiscountsModule, CartsModule, OrdersModule],
+  imports: [DatabaseModule, ProductsModule, DiscountsModule, CartsModule, OrdersModule, ChatModule],
   controllers: [AppController],
   providers: [AppService],
 })

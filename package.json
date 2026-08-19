@@ -8,7 +8,8 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-     "seed":"ts-node src/discounts/seed/seed.ts",
+    "seed:discounts": "ts-node src/discounts/seed/seed.ts",
+    "seed:products": "ts-node src/products/seed/seed.ts",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -25,6 +26,8 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/mongoose": "^11.0.4",
     "@nestjs/platform-express": "^11.0.1",
+    "class-validator": "^0.15.1",
+    "groq-sdk": "^1.5.0",
     "mongoose": "^9.9.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"

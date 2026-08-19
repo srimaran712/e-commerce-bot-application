@@ -21,15 +21,30 @@ export class ProductsService {
             filter.price={$lte:maxPrice}
         }
         //search with or operator any value present it will return
-        if(query){
-            filter.$or=[
-                 {   name: { $regex: query, $options: 'i' } },
-                 {description :{$regex:query, $options:'i'}},
-                 {category:{$regex:query,$options:'i'}}
-                ]
+        if(query?.trim()){
+            // const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             
+            // filter.$or=[
+            //      {   name: { $regex: escaped, $options: 'i' } },
+            //      {description :{$regex:escaped, $options:'i'}},
+            //      {category:{$regex:escaped,$options:'i'}}
+            //     ]   ///existing logic here
+            
+        const words = query
+      .trim()
+      .split(/\s+/)
+      .map((word) =>
+        word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+      );
+        filter.$and = words.map((word) => ({
+      $or: [
+        { name: { $regex: word, $options: 'i' } },
+        { description: { $regex: word, $options: 'i' } },
+        { category: { $regex: word, $options: 'i' } },
+      ],
+    }));
         }
 
-        return  await this.productModel.find(filter)
+        return  await this.productModel.find(filter).limit(10)
     }
 }
