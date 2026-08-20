@@ -14,7 +14,28 @@ export class DiscountsService {
 
     ){}
 
-    async calculateDiscount(sessionId:string,code:string){
+    //computing the discount calculation
+  private computeDiscount(
+  type: string,
+  value: number,
+  maxDiscount: number | undefined,
+  subTotal: number,
+): { discountAmount: number; totalAmount: number } {
+  let discountAmount = 0;
+
+  if (type === 'percent') {
+    discountAmount = subTotal * (value / 100);
+    if (maxDiscount !== undefined) {
+      discountAmount = Math.min(discountAmount, maxDiscount);
+    }
+  } else if (type === 'flat') {
+    discountAmount = Math.min(value, subTotal);
+  }
+
+  return { discountAmount, totalAmount: subTotal - discountAmount };
+}
+
+async calculateDiscount(sessionId:string,code:string){
           let TotalAmount=0
           let DiscountAmount=0
         //check whether the code exist and is active or not 

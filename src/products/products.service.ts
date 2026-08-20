@@ -17,6 +17,9 @@ export class ProductsService {
             active:true
         }
 
+        console.log('QUERY:', query);
+  console.log('MAX PRICE:', maxPrice);
+
         if(maxPrice!==undefined){
             filter.price={$lte:maxPrice}
         }
@@ -45,6 +48,13 @@ export class ProductsService {
     }));
         }
 
-        return  await this.productModel.find(filter).limit(10)
+        console.log(
+    'MONGO FILTER:',
+    JSON.stringify(filter, null, 2),
+  );  
+     const products=await this.productModel.find(filter).limit(10)
+      
+
+        return   products
     }
 }
