@@ -15,6 +15,8 @@ import {SYSTEM_PROMPT} from './constants/chat.constant'
 import {InjectModel} from '@nestjs/mongoose'
 import {Model} from 'mongoose'
 import { Conversation } from './schema/chat.schema';
+import {ConfigService} from '@nestjs/config'
+
 @Injectable()
 export class ChatService {
   private readonly groq: Groq;
@@ -28,9 +30,10 @@ export class ChatService {
     private readonly discountsService: DiscountsService,
     private readonly ordersService: OrdersService,
     @InjectModel(Conversation.name)
-    private conversationModel:Model<Conversation>
+    private conversationModel:Model<Conversation>,
+    private readonly configService:ConfigService
   ) {
-    const apiKey = process.env.GROQ_API_KEY;
+    const apiKey = this.configService.get('GROQ_API_KEY');
     if (!apiKey) {
       throw new Error('GROQ_API_KEY is not defined in environment variables');
     }

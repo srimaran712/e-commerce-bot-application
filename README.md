@@ -29,15 +29,14 @@ $ npm run start:prod
 # unit tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
 
-# test coverage
-$ npm run test:cov
 ```
 
-# branch -Development
+# branch ---> development
 the project is worked on the development branch 
+
+## after the git clone
+switch the branch to development git checkout development
 
 # Database using MongoDB
 I'm using the atlas free cluster for this assignment  , because in my orders feature implemented transactions that is not working with local db no replica set , so using thing for the database
@@ -47,7 +46,7 @@ I'm using the atlas free cluster for this assignment  , because in my orders fea
 ## for your note 
 Node.js version using for this assignment is 22
 
-version 24 is not supporting use the atlas database connection string , blocking the DNS , so I removed the SRV in the connection string for this assignment.
+version above 24 is not supporting use the atlas database connection string with SRV please turned off and use , blocking the DNS , so I removed the SRV in the connection string for this assignment.
 
 
 ## scripts to run the seed file 
@@ -72,9 +71,12 @@ payload
 {   "sessionId":"chat-test-11",
     "message": "can you show me hiking shoes"
 }
-add any random session id you can give 
+add any random session id you can give in the payload , it will create a session document for that
 
-
+# test case added in the file scenario.spec.ts
+npm test 
+it has 6 cases 1 will failed , 
+that is in the calculation I added the minimumcartvalue to obtain a discount , that flow is not added in the test case for your note
 
 # My assumptions on catalogue and discounts
  
@@ -131,9 +133,11 @@ second there will be synchronous llm tool calls can spike the memory and it will
 I'm choosed the mongoDB for this assignment for my flexibility, iniitally started with local instance, in orders I need to implement the transactions flow in the operation for that thing local instance will not supporting the transactions as it needs a replica set I tried to set the replica set in the local driver but failed, 
 so i found to use the mongoDb free cluster to shift the database , when I start integrating with this connection string atlas cluster its not supporting the connection , because I'm currently using the node.js version 24 , so in the src of the connection string will not support for versions more than 22 , that is a again got exhausted
 
+
+
 # found a fix
 Uninstalled all the npm packages created on 24 
-Switched to version 22 nvm use 22
+Switched to version 22 nvm use 22 but still that errconn error will come so, I
 removed the SRV  from the connection string of the driver , because src blocking the DNS lookup
 again installed the packages in 22
 added as mongodb:// 

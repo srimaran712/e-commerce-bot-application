@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { Product,ProductSchema } from '../schemas/products.schema';
 import mongoose from 'mongoose';
+import 'dotenv/config';
 
 
 const products = [
@@ -170,7 +171,7 @@ const products = [
 ];
 
 async function seed() {
-  const mongoUri = `mongodb://manimaransrinivasan35_db_user:Maransjc123^6@ac-kjn9elo-shard-00-00.mekezgj.mongodb.net:27017,ac-kjn9elo-shard-00-01.mekezgj.mongodb.net:27017,ac-kjn9elo-shard-00-02.mekezgj.mongodb.net:27017/ecommerce-chat-application?ssl=true&replicaSet=atlas-e5t3ph-shard-0&authSource=admin&appName=learningMongo`;
+  const mongoUri = process.env.MONGODB_URL;
 
   if (!mongoUri) {
     throw new Error('MONGODB_URI is not defined');

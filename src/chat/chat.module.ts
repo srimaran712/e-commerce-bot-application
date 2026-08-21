@@ -7,9 +7,13 @@ import { DiscountsModule } from 'src/discounts/discounts.module';
 import { OrdersModule } from 'src/orders/orders.module';
 import {MongooseModule} from '@nestjs/mongoose'
 import { Conversation,ConversationSchema } from './schema/chat.schema';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports:[
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     ProductsModule,
     CartsModule,
     DiscountsModule,
