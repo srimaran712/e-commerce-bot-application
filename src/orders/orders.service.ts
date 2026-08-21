@@ -150,7 +150,7 @@ const [order]=  await this.orderRepository.create(
        );
         
       if (err instanceof BadRequestException) {
-      return { error: 'STALE_PRICE_OR_STOCK', message: err.message };
+      return { success: false, error: 'STALE_PRICE_OR_STOCK', message: err.message };
     }
     throw err;
         }
