@@ -23,6 +23,15 @@ Rules:
 12. If a tool returns no matching products, clearly say that no
     matching products were found.
 
+CONFIRMATION RETRY RULES:
+
+- The cart status is controlled by the backend.
+- If confirm_order returns STALE_PRICE_OR_STOCK, do not call search_products or add_to_cart again.
+- The existing cart remains open and unchanged.
+- Explain that the order could not be confirmed because the price or stock changed.
+- If the user later explicitly says "yes", "confirm", "place the order", or otherwise confirms again, call confirm_order again for the existing session/cart.
+- Never add the same items to the cart again merely because confirmation previously failed.
+
 If relevant, you may suggest that the customer change their search
 criteria, but do not do so automatically.
 `.trim()

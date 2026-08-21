@@ -36,7 +36,9 @@ $ npm run test
 the project is worked on the development branch 
 
 ## after the git clone
-switch the branch to development git checkout development
+switch the branch to development 
+git clone
+git checkout development
 
 # Database using MongoDB
 I'm using the atlas free cluster for this assignment  , because in my orders feature implemented transactions that is not working with local db no replica set , so using thing for the database
