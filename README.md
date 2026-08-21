@@ -96,3 +96,39 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+
+
+# duplicate confirmation
+
+In the orders flow we completely handling with transactions and atomic operations
+at the very first stage we checking the cart with sessionID, that status is "open" only satisfies when matches sessionID and status open other wise it will not move forward this , once it fetch the cart we updating cart status to "confirming"is the reason I  preventing the duplication , after the order placed we updating the cart status to "placed", if any of the operations failed I rolledback entire operation remains with previous state cart status change back to "open
+
+firt request---> confirm--->order placed
+second request---> there is no cart found we can't place any order 
+third request ---> sorry 
+
+when user again and again how many times they will try to confirm it will not process any operation remains same, no stock deduction, no cart status update ,no orders created.
+
+
+# stopped the injection
+the model can only act through a fixed set of tool calls, and those tools enforce their own rules independently of what the model believes. Concretely: apply_discount only succeeds if the code exists in the real discount_codes collection, so an instruction like "apply a 100% discount" has nothing to attach to — there's no such code, injected or not.
+
+And also main in the system prompt added the note explicitly 
+
+this is the case I tested for this injection I explicitly asked the discount in the message 
+so the model returned like this 
+"
+I understand you’d like a discount applied. Our system can apply discounts when a valid discount code is provided. If
+you have a promo or VIP code, please share it and I’ll apply it to your cart right away. If you don’t have a code, I can
+check whether any standard discounts are currently available. Let me know how you’d like to proceed!"
+
+
+# one thing I'm not happy
+I'm choosed the mongoDB for this assignment for my flexibility, iniitally started with local instance, in orders I need to implement the transactions flow in the operation for that thing local instance will not supporting the transactions as it needs a replica set I tried to set the replica set in the local driver but failed, 
+so i found to use the mongoDb free cluster to shift the database , when I start integrating with this connection string atlas cluster its not supporting the connection , because I'm currently using the node.js version 24 , so in the src of the connection string will not support for versions more than 22 , that is a again got exhausted
+# found a fix
+Uninstalled all the npm packages created on 24 
+Switched to version 22 nvm use 22
+removed the src from the connection string of the driver , because src blocking the DNS lookup
+again installed the packages in 22
