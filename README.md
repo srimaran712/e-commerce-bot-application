@@ -62,6 +62,9 @@ npm run seed:discounts
 # for running the application dev
 npm run start:dev
 
+# .env
+MONGODB_URL
+GROQ_API_KEY
 
 # Endpoint for the chat api 
 method-POST
