@@ -1,26 +1,5 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
+ 
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
@@ -57,47 +36,67 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Deployment
+# branch -Development
+the project is worked on the development branch 
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+# Database using MongoDB
+I'm using the atlas free cluster for this assignment  , because in my orders feature implemented transactions that is not working with local db no replica set , so using thing for the database
 
 
+
+## for your note 
+Node.js version using for this assignment is 22
+
+version 24 is not supporting use the atlas database connection string , blocking the DNS , so I removed the SRV in the connection string for this assignment.
+
+
+## scripts to run the seed file 
+please make sure that is running on ts-node package
+# for seeding the products 
+ npm run seed:products
+
+# for seeding the discounts
+npm run seed:discounts
+
+# for running the application dev
+npm run start:dev
+
+
+# Endpoint for the chat api 
+method-POST
+
+https://localhost:3000/chat
+
+payload 
+
+{   "sessionId":"chat-test-11",
+    "message": "can you show me hiking shoes"
+}
+add any random session id you can give 
+
+
+
+# My assumptions on catalogue and discounts
+ 
+ My assumption on catalogue, first choose the shoes as of products , I seeded the 20 product items with name, description, category, price, stock and whether that specific product is active or not 
+ first created a collections , I wrote on seed script for inserting data, in one of  the description I added the Injection prompt that is in the outdoor shoe
+
+ 1. in the product search, I added query and max price , the price user can choose minimum and in the query they can search with name , description and category , I added a flow that only search products with in stock only have to return the result otherwise will return the empty array this is my execution
+
+
+Assumptions on discounts, I created a separate collection for that seed three discount code with code name ,type, value , minimum cart value , first initially I planned to create in product collection , then I thought to make separate because in future we can discount code as we want we can deactivate code , that flow executed here.
+Minimum cart value added , the user can purchase above 5000 only able to activate code 
+for example I have save20 code purchased for 4890 , but the code will not apply because for that code you need to purchase above 5000
+
+also included validation to avoid negative values 
+
+I found some edge cases in the discount myself
+one user can repeatedly applying the same code
+there is no validation for that, so what I need , first when the applied , in the calculating flow , I updating that in the carts collection as discount code , 
+when they try to apply again it won't apply 
+also in the orders same validation handled for discounts to check
+
+this are my overview of assumption what I did in this task
 
 # duplicate confirmation
 
@@ -123,12 +122,18 @@ I understand you’d like a discount applied. Our system can apply discounts whe
 you have a promo or VIP code, please share it and I’ll apply it to your cart right away. If you don’t have a code, I can
 check whether any standard discounts are currently available. Let me know how you’d like to proceed!"
 
+# at first 10,000 orders 
+
+first the interesting thing is token will exhausted
+second there will be synchronous llm tool calls can spike the memory and it will get a delay response that is not good for the user
 
 # one thing I'm not happy
 I'm choosed the mongoDB for this assignment for my flexibility, iniitally started with local instance, in orders I need to implement the transactions flow in the operation for that thing local instance will not supporting the transactions as it needs a replica set I tried to set the replica set in the local driver but failed, 
 so i found to use the mongoDb free cluster to shift the database , when I start integrating with this connection string atlas cluster its not supporting the connection , because I'm currently using the node.js version 24 , so in the src of the connection string will not support for versions more than 22 , that is a again got exhausted
+
 # found a fix
 Uninstalled all the npm packages created on 24 
 Switched to version 22 nvm use 22
-removed the src from the connection string of the driver , because src blocking the DNS lookup
+removed the SRV  from the connection string of the driver , because src blocking the DNS lookup
 again installed the packages in 22
+added as mongodb:// 
